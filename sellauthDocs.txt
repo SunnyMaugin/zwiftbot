@@ -1,0 +1,184 @@
+[Path parameters]
+shopIdstring
+invoiceIdstring
+
+
+[Response]
+{
+  "id": 1,
+  "status": "text",
+  "product_id": 1,
+  "variant_id": 1,
+  "price": "text",
+  "currency": "text",
+  "gateway": "text",
+  "email": "text",
+  "salt": "text",
+  "manual": 1,
+  "created_at": "2025-02-07T03:37:00.045Z",
+  "completed_at": "2025-02-07T03:37:00.045Z",
+  "archived": 1,
+  "unique_id": "text",
+  "product": {
+    "id": 1,
+    "name": "text",
+    "stock_count": 1
+  },
+  "variant": {},
+  "coupon_id": 1,
+  "paypalff_email": "text",
+  "customer_id": 1,
+  "delivered": "text",
+  "amount": 1,
+  "price_usd": "text",
+  "custom_fields": [
+    {
+      "id": 1,
+      "shop_id": 1,
+      "name": "Your Name",
+      "hint": null,
+      "type": "text",
+      "options": null,
+      "is_required": true,
+      "created_at": "2024-01-01T00:00:00.000000Z",
+      "updated_at": "2024-01-01T00:00:00.000000Z",
+      "pivot": {
+        "morphable_id": 1,
+        "custom_field_id": 1
+      }
+    }
+  ],
+  "ip": "text",
+  "user_agent": "text",
+  "crypto_address": "text",
+  "crypto_amount": "text",
+  "shop_id": 1,
+  "cashapp_cashtag": "text",
+  "venmo_tag": "text",
+  "cashapp_receipt_id": "text",
+  "cashapp_transaction_id": "text",
+  "discord_user_id": "text",
+  "paypalff_transaction_id": "text",
+  "price_eur": "text",
+  "paypalff_currency": "text",
+  "paypalff_note": "text",
+  "stripe_pi_id": "text"
+}
+
+[checkout]
+headers: {
+  Authorization: 'Bearer API KEY', // https://dash.sellauth.com/api
+  Accept: 'Application/json'
+}
+
+body: JSON.stringify({
+  // Required parameters:
+  "cart": [
+    {
+      "productId": 123, // Find it on the Products page
+      "variantId": 456, // Find it on the Product Edit page, when editing a variant
+      "quantity": 1,
+      // Optional: prefill custom fields
+      "custom_fields": {
+        "1": "My Username", // Custom Field ID: Custom Field Value; the ID can be seen when editing a custom field.
+      }
+    }
+  ],
+  // Optional parameters:
+  "gateway": "LTC", // BTC, LTC, PAYPAL, STRIPE, SQUARE, CASHAPP, VENMO, PAYPALFF, AMAZONPS, SUMUP, MOLLIE, SKRILL, AUTHORIZENET, LEMONSQUEEZY,
+  "coupon": "10OFF",
+  "email": "customer@gmail.com",
+  "ip": "",
+  "country_code": "",
+  "user_agent": "",
+  "asn": ""
+})
+
+{
+  "success": true,
+  "invoice_id": 1,
+  "invoice_url": "https://myshop.mysellauth.com/checkout/85a3599266463-0000000000001",
+  "url": "https://myshop.mysellauth.com/checkout/85a3599266463-0000000000001" // This could be an external URL, for example to Stripe
+}
+
+
+[Dynamic Delivery]
+
+- POST request is sent to your server
+- 200 response is expected, otherwise the request is retried
+- Sample request body: (a few fields were not included due to character limit on Discord)
+
+{
+    "id": 1,
+    "coupon_id": null,
+    "coupon_discount": "0.00",
+    "gateway_fee": "0.00",
+    "paypalff_email": null,
+    "shop_customer_id": 1,
+    "created_at": "2025-02-02T00:00:00.000000Z",
+    "updated_at": "2025-02-02T00:00:00.000000Z",
+    "completed_at": "2025-02-02T00:00:00.000000Z",
+    "archived_at": null,
+    "salt": "4fe3d9a70887d",
+    "gateway": "VENMO",
+    "email": "customer@shop.com",
+    "status": "completed",
+    "price": "2.00",
+    "currency": "USD",
+    "amount": 1,
+    "price_usd": "2.00",
+    "custom_fields": null,
+    "dashboard_note": null,
+    "ip": "127.0.0.1",
+    "country_code": null,
+    "user_agent": "Mozilla/5.0",
+    "asn": null,
+    "crypto_address": null,
+    "crypto_amount": null,
+    "product_id": null,
+    "shop_id": 1,
+    "variant_id": null,
+    "venmo_tag": "VENMO",
+    "venmo_note": null,
+    "manual": 1,
+    "unique_id": "4fe3d9a70887d-0000000000001",
+    "customer": {
+        "id": 1,
+        "shop_id": 1,
+        "email": "customer@shop.com",
+        "discord_id": "616713407537610819",
+        "discord_username": "def.js"
+    },
+    "coupon": null,
+    "crypto_transactions": [],
+    "item": {
+        "id": 1,
+        "invoice_id": 1,
+        "product_id": 1,
+        "variant_id": 1,
+        "status": "pending",
+        "price": "2.00",
+        "quantity": 1,
+        "coupon_id": null,
+        "coupon_discount": "0.00",
+        "volume_discount": "0.00",
+        "total_price": "2.00",
+        "total_price_usd": "2.00",
+        "custom_fields": null,
+        "delivered": null,
+        "completed_at": null,
+        "product": {
+            "id": 1,
+            "name": "Dynamic"
+        },
+        "variant": {
+            "id": 1,
+            "name": "Default"
+        }
+    },
+    "invoice_id": 1
+}
+
+- As you can see, only one item is passed, because each item sends it's own request.
+- Request signature validation:
+- Webhook Secret can be obtained here: https://dash.sellauth.com/shop#miscellaneous
